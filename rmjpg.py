@@ -2,8 +2,6 @@
 
 import argparse
 import os
-from datetime import datetime
-
 
 parser = argparse.ArgumentParser(
     description="Remove JPG-files if RAW file exists.")
