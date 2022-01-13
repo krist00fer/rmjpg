@@ -2,15 +2,19 @@
 
 import argparse
 import os
-import glob
 from datetime import datetime
 
 
-parser = argparse.ArgumentParser(description="Remove JPG-files if RAW file exists.")
-parser.add_argument('--path', nargs='?', default='.', help='path to look into, defaults to current.')
-parser.add_argument('--trash', nargs='?', default='trash', help='path to move found JPGs to (i.e files are not removed)')
-parser.add_argument('--remove', nargs='?', default=False, help='set to True to execute, otherwise will only simulate removal')
+parser = argparse.ArgumentParser(
+    description="Remove JPG-files if RAW file exists.")
+parser.add_argument('--path', nargs='?', default='.',
+                    help='path to look into, defaults to current.')
+parser.add_argument('--trash', nargs='?', default='trash',
+                    help='path to move found JPGs to (i.e files are not removed)')
+parser.add_argument('--remove', nargs='?', default=False,
+                    help='set to True to execute, otherwise will only simulate removal')
 args = parser.parse_args()
+
 
 def remove_file(file):
     if (args.remove):
@@ -19,14 +23,16 @@ def remove_file(file):
     else:
         print(f'{file} would be (re)moved')
 
-jpg_extensions = ['.JPG', '.JPEG']
-raw_extensions = ['.RWZ','.RAF','.CR2','.RW2','.ERF','.NRW','.DNG','.NEF',
-                  '.K25','.ARW','.SRF','.EIP','.DNG','.DCR','.RAW','.CRW',
-                  '.3FR','.BAY','.CS1','.MEF','.KDC','.ORF','.SR2','.ARI',
-                  '.MOS','.FFF','.MFW','.CR3','.SRW','.J6I','.RWL','.X3F',
-                  '.KC2','.MRW','.PEF','.IIQ','.CXI','.NKSC','.MDC']
 
-max_modified_time_diff = 10 # Files need to be taken/modified within these number of seconds to be considered as taken at the same time
+jpg_extensions = ['.JPG', '.JPEG']
+raw_extensions = ['.RWZ', '.RAF', '.CR2', '.RW2', '.ERF', '.NRW', '.DNG', '.NEF',
+                  '.K25', '.ARW', '.SRF', '.EIP', '.DNG', '.DCR', '.RAW', '.CRW',
+                  '.3FR', '.BAY', '.CS1', '.MEF', '.KDC', '.ORF', '.SR2', '.ARI',
+                  '.MOS', '.FFF', '.MFW', '.CR3', '.SRW', '.J6I', '.RWL', '.X3F',
+                  '.KC2', '.MRW', '.PEF', '.IIQ', '.CXI', '.NKSC', '.MDC']
+
+# Files need to be taken/modified within these number of seconds to be considered as taken at the same time
+max_modified_time_diff = 10
 
 with os.scandir(args.path) as dir_entries:
     files = sorted(list(dir_entries), key=lambda x: x.path)
@@ -36,7 +42,7 @@ with os.scandir(args.path) as dir_entries:
     last_was_jpg = False
     last_st_mtime = 0
     jpg_in_set_removed = False
-    
+
     for file in files:
         info = file.stat()
         (file_name, file_extension) = os.path.splitext(file.path)
@@ -58,7 +64,7 @@ with os.scandir(args.path) as dir_entries:
             else:
                 # Since filename wasn't the same as last, we are in a new set of files... possibly
                 jpg_in_set_removed = False
-        
+
         last_file_name = file_name
         last_file_extension = file_extension
         last_was_jpg = is_jpg
